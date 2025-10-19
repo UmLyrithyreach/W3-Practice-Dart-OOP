@@ -1,3 +1,5 @@
+import '../data/quiz_file_provider.dart';
+
 class Question {
   final String title;
   final List<String> choices;
@@ -45,8 +47,7 @@ class Quiz {
   }
 
   int getScoreInPoint() {
-    int totalSCore = 0, max = 0;
-
+    int totalSCore = 0;
     for (Answer answer in answers) {
       if (answer.isGood()) {
         totalSCore += answer.question.point;
@@ -54,4 +55,5 @@ class Quiz {
     }
     return totalSCore;
   }
+
 }

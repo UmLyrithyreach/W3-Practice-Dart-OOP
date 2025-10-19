@@ -1,16 +1,28 @@
-import 'package:my_first_project/domain/quiz.dart';
+import '../lib/domain/quiz.dart';
 import 'package:test/test.dart';
 
 main() {
   test('My first test', () {
     // Do something
-    Question question = Question(
-        title: "Who is my mother",
-        choices: ["Idk", "What?", "What kind of question is that"],
-        goodChoice: "Lol", point: 20);
-
+    List<Question> questions = [
+      Question(
+          title: "Who is my mother",
+          choices: ["Idk", "What?", "What kind of question is that"],
+          goodChoice: "Lol",
+          point: 20)
+    ];
+    Quiz quiz = Quiz(questions: questions);
     // Check something
-    expect(question.goodChoice, equals("Lol"));
-    expect(1+1, equals(2));
+    Answer answer = Answer(question: questions[0], answerChoice: "Lol");
+    quiz.addAnswer(answer);
+
+    print("Test Correctness");
+    expect(answer.question.goodChoice, equals("Lol"));
+
+    print("Test Point");
+    expect(answer.question.point, equals(20));
+
+    print("Test Score percentage");
+    expect(quiz.getScoreInPercentage(), equals(100));
   });
 }
