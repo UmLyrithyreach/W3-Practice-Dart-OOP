@@ -1,12 +1,15 @@
 import 'dart:io';
-import '../domain/player.dart';
 import '../domain/quiz.dart';
+import '../data/quiz_file_provider.dart';
 
 class QuizConsole {
   Quiz quiz;
   Map<String, Player> players = {};
+  late SubmissionRepository submissionRepo;
 
-  QuizConsole({required this.quiz});
+  QuizConsole({required this.quiz}) {
+    submissionRepo = SubmissionRepository("lib/data/userData.json");
+  }
 
   void startQuiz() {
     print('--- Welcome to the Quiz ---\n');
@@ -29,11 +32,12 @@ class QuizConsole {
         String? userInput = stdin.readLineSync();
 
         // Check for null input
-        if (userInput != null && userInput.isNotEmpty) {
-          Answer answer = Answer(question: question, answerChoice: userInput);
-          quiz.addAnswer(answer);
-        } else {
+        if (userInput == null || userInput.isEmpty) {
           print('No answer entered. Skipping question.');
+        } else {
+          Answer answer =
+              Answer(questionID: question.id, answerChoice: userInput);
+          quiz.addAnswer(answer);
         }
 
         print('');
@@ -42,8 +46,13 @@ class QuizConsole {
       int scoreInPercentage = quiz.getScoreInPercentage();
 
       player.updateScore(point: scoreInPoint);
+      player.scoreInPercentage = scoreInPercentage;
 
       players[nameInput] = player;
+
+      // Save the submission to userData.json
+      submissionRepo.saveSubmission(quiz, player);
+
       print("""
 ${player.name}, your score:
 - In percentage: $scoreInPercentage %

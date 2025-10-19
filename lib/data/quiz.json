@@ -1,0 +1,54 @@
+{
+    "quizzes": [
+        {
+            "questions": [
+                {
+                    "id": "1",
+                    "title": "I love Jinny",
+                    "choices": [
+                        "Jinny",
+                        "Sokheang",
+                        "Soju"
+                    ],
+                    "goodChoice": "Sokheang",
+                    "point": 1200000
+                },
+                {
+                    "id": "2",
+                    "title": "334d",
+                    "choices": [
+                        "2",
+                        "3",
+                        "4",
+                        "5"
+                    ],
+                    "goodChoice": "2",
+                    "point": 12
+                },
+                {
+                    "id": "3",
+                    "title": "What is 5 + 3?",
+                    "choices": [
+                        "6",
+                        "7",
+                        "8",
+                        "9"
+                    ],
+                    "goodChoice": "8",
+                    "point": 20
+                },
+                {
+                    "id": "4",
+                    "title": "I love Jinny",
+                    "choices": [
+                        "I",
+                        "Love",
+                        "Her"
+                    ],
+                    "goodChoice": "Love",
+                    "point": 1000
+                }
+            ]
+        }
+    ]
+}

@@ -6,6 +6,7 @@ main() {
     // Do something
     List<Question> questions = [
       Question(
+          id: "1",
           title: "Who is my mother",
           choices: ["Idk", "What?", "What kind of question is that"],
           goodChoice: "Lol",
@@ -13,14 +14,14 @@ main() {
     ];
     Quiz quiz = Quiz(questions: questions);
     // Check something
-    Answer answer = Answer(question: questions[0], answerChoice: "Lol");
+    Answer answer = Answer(questionID: questions[0].id, answerChoice: "Lol");
     quiz.addAnswer(answer);
 
     print("Test Correctness");
-    expect(answer.question.goodChoice, equals("Lol"));
+    expect(questions[0].goodChoice, equals("Lol"));
 
     print("Test Point");
-    expect(answer.question.point, equals(20));
+    expect(questions[0].point, equals(20));
 
     print("Test Score percentage");
     expect(quiz.getScoreInPercentage(), equals(100));
