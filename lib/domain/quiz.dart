@@ -1,27 +1,26 @@
+import '../data/quiz_file_provider.dart';
+
 class Question {
-  final String id;
   final String title;
   final List<String> choices;
   final String goodChoice;
   final int point;
 
   Question(
-      {required this.id,
-      required this.title,
+      {required this.title,
       required this.choices,
       required this.goodChoice,
       required this.point});
 }
 
 class Answer {
-  final String questionID;
+  final Question question;
   final String answerChoice;
 
-  Answer({required this.questionID, required this.answerChoice});
+  Answer({required this.question, required this.answerChoice});
 
-  bool isGood(List<Question> questions) {
-    final question = questions.firstWhere((q) => q.id == questionID);
-    return answerChoice == question.goodChoice;
+  bool isGood() {
+    return this.answerChoice == question.goodChoice;
   }
 }
 
@@ -36,46 +35,25 @@ class Quiz {
   }
 
   int getScoreInPercentage() {
-    int totalScore = 0, max = 0;
+    int totalSCore = 0, max = 0;
 
     for (Answer answer in answers) {
-      final question = questions.firstWhere((q) => q.id == answer.questionID);
-      if (answer.isGood(questions)) {
-        totalScore += question.point;
+      if (answer.isGood()) {
+        totalSCore += answer.question.point;
       }
-      max += question.point;
+      max += answer.question.point;
     }
-    if (max == 0) return 0;
-    return ((totalScore / max) * 100).toInt();
+    return ((totalSCore / max) * 100).toInt();
   }
 
   int getScoreInPoint() {
-    int totalScore = 0;
+    int totalSCore = 0;
     for (Answer answer in answers) {
-      final question = questions.firstWhere((q) => q.id == answer.questionID);
-      if (answer.isGood(questions)) {
-        totalScore += question.point;
+      if (answer.isGood()) {
+        totalSCore += answer.question.point;
       }
     }
-    return totalScore;
-  }
-}
-
-class Player {
-  final String name;
-  int scoreInPoint;
-  int scoreInPercentage;
-
-  Player(
-      {required this.name, this.scoreInPoint = 0, this.scoreInPercentage = 0});
-
-  void updateScore({required int point}) {
-    scoreInPoint = point;
+    return totalSCore;
   }
 
-  @override
-  String toString() {
-    // TODO: implement toString
-    return "Player Name: ${name} \t Score: ${scoreInPoint}pts";
-  }
 }
