@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:convert';
 import '../domain/player.dart';
 import '../domain/quiz.dart';
 
@@ -30,7 +31,8 @@ class QuizConsole {
 
         // Check for null input
         if (userInput != null && userInput.isNotEmpty) {
-          Answer answer = Answer(question: question, answerChoice: userInput);
+          Answer answer =
+              Answer(answerChoice: userInput, questionId: question.id);
           quiz.addAnswer(answer);
         } else {
           print('No answer entered. Skipping question.');
@@ -56,6 +58,51 @@ ${player.name}, your score:
         print(p);
       }
       print('');
+      // Save submission to file
+      _saveSubmission(
+        player: player,
+        scoreInPoint: scoreInPoint,
+        scoreInPercentage: scoreInPercentage,
+        answers: quiz.answers,
+      );
     }
+  }
+
+  void _saveSubmission({
+    required Player player,
+    required int scoreInPoint,
+    required int scoreInPercentage,
+    required List<Answer> answers,
+  }) {
+    final filePath = 'lib/data/player_submission.json';
+    final file = File(filePath);
+
+    List<dynamic> submissions = [];
+    if (file.existsSync()) {
+      try {
+        final content = file.readAsStringSync();
+        if (content.trim().isNotEmpty) {
+          submissions = jsonDecode(content) as List<dynamic>;
+        }
+      } catch (e) {
+        // ignore and start fresh
+        submissions = [];
+      }
+    }
+
+    final submission = {
+      'id': player.userId,
+      'name': player.name,
+      'timestamp': DateTime.now().toIso8601String(),
+      'scoreInPoint': scoreInPoint,
+      'scoreInPercentage': scoreInPercentage,
+      'answers': answers
+          .map((a) =>
+              {'questionId': a.questionId, 'answerChoice': a.answerChoice})
+          .toList(),
+    };
+
+    submissions.add(submission);
+    file.writeAsStringSync(JsonEncoder.withIndent('  ').convert(submissions));
   }
 }

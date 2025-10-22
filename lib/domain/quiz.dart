@@ -1,59 +1,74 @@
-import '../data/quiz_file_provider.dart';
+import 'package:uuid/uuid.dart';
+
+var uuid = Uuid();
 
 class Question {
+  final String id;
   final String title;
   final List<String> choices;
   final String goodChoice;
   final int point;
 
-  Question(
-      {required this.title,
-      required this.choices,
-      required this.goodChoice,
-      required this.point});
+  Question({
+    String? id,
+    required this.title,
+    required this.choices,
+    required this.goodChoice,
+    required this.point,
+  }) : id = id ?? uuid.v4();
 }
 
 class Answer {
-  final Question question;
+  final String id;
+  final String questionId;
   final String answerChoice;
 
-  Answer({required this.question, required this.answerChoice});
-
-  bool isGood() {
-    return this.answerChoice == question.goodChoice;
-  }
+  Answer({
+    String? id,
+    required this.questionId,
+    required this.answerChoice,
+  }) : id = id ?? uuid.v4();
 }
 
 class Quiz {
+  final String id;
   List<Question> questions;
   List<Answer> answers = [];
 
-  Quiz({required this.questions});
+  Quiz({
+    String? id,
+    required this.questions,
+  }) : id = id ?? uuid.v4();
 
-  void addAnswer(Answer asnwer) {
-    this.answers.add(asnwer);
+  void addAnswer(Answer answer) {
+    answers.add(answer);
   }
 
-  int getScoreInPercentage() {
-    int totalSCore = 0, max = 0;
+  Question? getQuestionById(String id) =>
+      questions.firstWhere((q) => q.id == id,
+          orElse: () => throw Exception('Question not found'));
 
-    for (Answer answer in answers) {
-      if (answer.isGood()) {
-        totalSCore += answer.question.point;
+  int getScoreInPercentage() {
+    int totalScore = 0, max = 0;
+
+    for (var answer in answers) {
+      var q = getQuestionById(answer.questionId);
+      if (answer.answerChoice == q!.goodChoice) {
+        totalScore += q.point;
       }
-      max += answer.question.point;
+      max += q.point;
     }
-    return ((totalSCore / max) * 100).toInt();
+    return ((totalScore / max) * 100).toInt();
   }
 
   int getScoreInPoint() {
-    int totalSCore = 0;
-    for (Answer answer in answers) {
-      if (answer.isGood()) {
-        totalSCore += answer.question.point;
+    int totalScore = 0;
+    for (var answer in answers) {
+      var q = getQuestionById(answer.questionId);
+      if (answer.answerChoice == q!.goodChoice) {
+        totalScore += q.point;
       }
     }
-    return totalSCore;
+    return totalScore;
   }
-
 }
