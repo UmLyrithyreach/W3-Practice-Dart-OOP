@@ -43,7 +43,7 @@ class QuizConsole {
       int scoreInPoint = quiz.getScoreInPoint();
       int scoreInPercentage = quiz.getScoreInPercentage();
 
-      player.updateScore(point: scoreInPoint);
+      player.updateScore(point: scoreInPoint, percentage: scoreInPercentage);
 
       players[nameInput] = player;
       print("""

@@ -13,8 +13,9 @@ class Player {
 
   String get userId => id;
 
-  void updateScore({required int point}) {
+  void updateScore({required int point, required int percentage}) {
     scoreInPoint = point;
+    scoreInPercentage = percentage;
   }
 
   @override
